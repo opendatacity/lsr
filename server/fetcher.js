@@ -16,14 +16,13 @@ exports.analyse = function (url, callback) {
 		res.on('end', function () {
 			rules.meta = [];
 			
-			//console.log(data);
 			var metas = data.match(/\<meta.*?\>/g);
 			if (metas != null) {
 				metas.forEach(function (meta) {
 					var name = meta.match(/name\s*=\s*[\"\'](.*?)[\"\']/i);
 					if (name != null) {
 						name = name[1];
-						if ('|robots|googlebot|googlebot-news|'.indexOf('|'+name+'|') >= 0) {
+						if ('|robots|googlebot|googlebot-news|googlebot-image|'.indexOf('|'+name+'|') >= 0) {
 							var value = meta.match(/content\s*=\s*[\"\'](.*?)[\"\']/i);
 							if (value != null) {
 								value = value[1].split(',');
