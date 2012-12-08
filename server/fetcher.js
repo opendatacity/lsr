@@ -2,6 +2,7 @@ var HTTP = require('http');
 var URL = require('url');
 
 exports.analyse = function (url, callback) {
+	console.log('Checking "'+url+'"');
 	var rules = {};
 	
 	var finalize = function () {
@@ -10,28 +11,32 @@ exports.analyse = function (url, callback) {
 	
 	var parsePage = function (res) {
 		var data = '';
+		rules.statusCode = res.statusCode;
 		res.on('data', function (chunk) { data += chunk });
 		res.on('end', function () {
 			rules.meta = [];
+			
 			//console.log(data);
 			var metas = data.match(/\<meta.*?\>/g);
-			metas.forEach(function (meta) {
-				var name = meta.match(/name\s*=\s*[\"\'](.*?)[\"\']/i);
-				if (name != null) {
-					name = name[1];
-					if ('|robots|googlebot|googlebot-news|'.indexOf('|'+name+'|') >= 0) {
-						var value = meta.match(/content\s*=\s*[\"\'](.*?)[\"\']/i);
-						if (value != null) {
-							value = value[1].split(',');
-							rules.meta.push({
-								line: meta,
-								name: name,
-								value: value
-							});
+			if (metas != null) {
+				metas.forEach(function (meta) {
+					var name = meta.match(/name\s*=\s*[\"\'](.*?)[\"\']/i);
+					if (name != null) {
+						name = name[1];
+						if ('|robots|googlebot|googlebot-news|'.indexOf('|'+name+'|') >= 0) {
+							var value = meta.match(/content\s*=\s*[\"\'](.*?)[\"\']/i);
+							if (value != null) {
+								value = value[1].split(',');
+								rules.meta.push({
+									line: meta,
+									name: name,
+									value: value
+								});
+							}
 						}
 					}
-				}
-			});
+				});
+			}
 			finalize();
 		});
 	}
@@ -75,7 +80,7 @@ exports.analyse = function (url, callback) {
 	
 	var opt = URL.parse(url);
 	
-	var requestPage  = HTTP.get({ host:opt.host, path:opt.path    }, parsePage );
+	var requestPage  = HTTP.get({ host:opt.host, path:opt.path     }, parsePage );
 	var requestRobot = HTTP.get({ host:opt.host, path:'/robots.txt'}, parseRobot);
 
 }
