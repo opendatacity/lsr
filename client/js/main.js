@@ -21,7 +21,7 @@ function check() {
 	
 	$('#result').html('Die Seite wird überprüft ...');
 	
-	$.getJSON('http://localhost:8080/'+url, function (data) {
+	$.getJSON($server+url, function (data) {
 		var html = '';
 		if (data.statusCode != 200) {
 			html = '<div class="alert alert-error">Die Seite konnte nicht geladen werden!</div>';
