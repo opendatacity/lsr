@@ -9,19 +9,31 @@ exports.analyse = function (url, callback) {
 	
 	console.log('Checking "'+url+'"');
 	
-	var rules = {};
+	var result = {
+		rules: {},
+		permissions: {
+			'robots':          {access:true, index: true, snippet: true},
+			'googlebot':       {access:true, index: true, snippet: true},
+			'googlebot-news':  {access:true, index: true, snippet: true},
+			'googlebot-image': {access:true, index: true, snippet: true}
+		},
+		summary: {}
+	};
 	
 	var finalize = function () {
-		if ((rules.meta !== undefined) && (rules.robot !== undefined)) callback(rules);
+		if ((result.rules.meta !== undefined) && (result.rules.robot !== undefined)) {
+			//result.summary = 'hallo';
+			callback(result);
+		}
 	}
 	
 	var parsePage = function (res) {
 		var data = '';
-		rules.statusCode = res.statusCode;
+		result.statusCode = res.statusCode;
 		res.on('data', function (chunk) { data += chunk });
 		res.on('end', function () {
 			
-			rules.meta = [];
+			result.rules.meta = [];
 						
 			var metas = data.match(/\<meta.*?\>/g);
 			
@@ -35,6 +47,7 @@ exports.analyse = function (url, callback) {
 							if (value != null) {
 								value = value[1].split(',');
 								rules.meta.push({
+								result.rules.meta.push({
 									line: meta,
 									name: name,
 									value: value
@@ -53,8 +66,8 @@ exports.analyse = function (url, callback) {
 		res.on('data', function (chunk) { data += chunk });
 		res.on('end', function () {
 			var isGooglebot = false;
-			rules.robot = [];
 			var robotLine, ruleLine;
+			result.rules.robot = [];
 			
 			data = data.replace(/[\n\r]+/g, '\n');
 			data.split('\n').forEach(function (line) {
@@ -76,6 +89,15 @@ exports.analyse = function (url, callback) {
 									robot: robot,
 									disallow:true 
 								});
+							result.rules.robot.push({
+								line1: robotLine,
+								line2: ruleLine,
+								robot: robot,
+								url: value,
+								allow: command == 'allow',
+								forGoogle: isGooglebot,
+								matchedUrl: matchedUrl
+							});
 							}
 						}
 					}
