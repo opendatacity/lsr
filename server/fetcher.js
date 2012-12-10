@@ -2,7 +2,13 @@ var HTTP = require('http');
 var URL = require('url');
 
 exports.analyse = function (url, callback) {
+	
+	if (!url.match(/http(s)?:/)) callback({});
+	
+	url = url.replace(/^(http(s)?):\/([^/].*)$/,"$1://$3",url);
+	
 	console.log('Checking "'+url+'"');
+	
 	var rules = {};
 	
 	var finalize = function () {
@@ -14,9 +20,11 @@ exports.analyse = function (url, callback) {
 		rules.statusCode = res.statusCode;
 		res.on('data', function (chunk) { data += chunk });
 		res.on('end', function () {
-			rules.meta = [];
 			
+			rules.meta = [];
+						
 			var metas = data.match(/\<meta.*?\>/g);
+			
 			if (metas != null) {
 				metas.forEach(function (meta) {
 					var name = meta.match(/name\s*=\s*[\"\'](.*?)[\"\']/i);
@@ -78,12 +86,15 @@ exports.analyse = function (url, callback) {
 	}
 	
 	var opt = URL.parse(url);
-	
-	var requestPage  = HTTP.get({ host:opt.host, path:opt.path     }, parsePage );
-	var requestRobot = HTTP.get({ host:opt.host, path:'/robots.txt'}, parseRobot);
+
+	var requestPage  = HTTP.get({ host:opt.host, path:opt.path     }, parsePage ).on('error', function(e) {
+		console.log("Got error: " + e.message);
+	});
+	var requestRobot = HTTP.get({ host:opt.host, path:'/robots.txt'}, parseRobot).on('error', function(e) {
+		console.log("Got error: " + e.message);
+	});
 
 }
-
 
 /* Why is always this fucking */ function /* missing to */ trim /* a fucking */ (text) /* ???? */ {
 	return text.replace(/^\s*|\s*$/g, '');
