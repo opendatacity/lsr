@@ -10,7 +10,14 @@ $(function () {
 		}
 	}, 200);
 	
-	$('#checkForm').submit(function () { check() });
+	$('#checkForm').submit(function (e) {
+		check();
+		return false;
+	$('#submitButton').click(function (e) {
+		e.preventDefault();
+		check();
+		return false;
+	});
 });
 
 function check() {
