@@ -106,7 +106,7 @@ exports.analyse = function (url, callback) {
 						ruleLine = line;
 						if (isGooglebot) {
 							var pattern = trim(value);
-							pattern = pattern.replace(/[\(\)\\\[\]\{\}]/g, '\\$&');
+							pattern = pattern.replace(/[\(\)\\\[\]\{\}\?\+]/g, '\\$&');
 							if (pattern.charAt(pattern.length - 1) != '*') pattern += '*';
 							pattern = pattern.replace(/\*/g, '.*');
 							pattern = new RegExp(pattern, 'g');
