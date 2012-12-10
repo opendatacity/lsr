@@ -1,7 +1,6 @@
+var config = require('./config');
 var HTTP = require('http');
-
 var analyse = require('./fetcher').analyse;
-
 
 HTTP.createServer( function (req, res) {
 	var url = req.url.substr(1);
@@ -11,4 +10,4 @@ HTTP.createServer( function (req, res) {
 		console.log(result);
 		res.end(result);
 	})
-}).listen(8080);
+}).listen(config.listen.port, config.listen.host);
