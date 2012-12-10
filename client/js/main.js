@@ -11,8 +11,10 @@ $(function () {
 	}, 200);
 	
 	$('#checkForm').submit(function (e) {
+		e.preventDefault();
 		check();
 		return false;
+	});
 	$('#submitButton').click(function (e) {
 		e.preventDefault();
 		check();
