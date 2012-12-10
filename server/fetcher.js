@@ -35,7 +35,7 @@ exports.analyse = function (url, callback) {
 			
 			result.rules.meta = [];
 						
-			var metas = data.match(/\<meta.*?\>/g);
+			var metas = data.match(/\<meta.*?\>/gi);
 			
 			if (metas != null) {
 				metas.forEach(function (meta) {
