@@ -20,6 +20,17 @@ exports.analyse = function (url, callback) {
 		summary: {}
 	};
 	
+	var updatePermissions = function (robot, type, value) {
+		result.permissions[robot][type] = value;
+		if (robot == 'robots') {
+			updatePermissions('googlebot', type, value);
+		}
+		if (robot == 'googlebot') {
+			updatePermissions('googlebot-news',  type, value);
+			updatePermissions('googlebot-image', type, value);
+		}
+	}
+	
 	var finalize = function () {
 		if ((result.rules.meta !== undefined) && (result.rules.robot !== undefined)) {
 			//result.summary = 'hallo';
@@ -41,16 +52,26 @@ exports.analyse = function (url, callback) {
 				metas.forEach(function (meta) {
 					var name = meta.match(/name\s*=\s*[\"\'](.*?)[\"\']/i);
 					if (name != null) {
-						name = name[1];
-						if ('|robots|googlebot|googlebot-news|googlebot-image|'.indexOf('|'+name+'|') >= 0) {
-							var value = meta.match(/content\s*=\s*[\"\'](.*?)[\"\']/i);
-							if (value != null) {
-								value = value[1].split(',');
-								rules.meta.push({
+						var robot = name[1];
+						if ('|robots|googlebot|googlebot-news|googlebot-image|'.indexOf('|'+robot+'|') >= 0) {
+							var values = meta.match(/content\s*=\s*[\"\'](.*?)[\"\']/i);
+							if (values != null) {
+								values = values[1].split(',');
+								
+								for (var i = 0; i < values.length; i++) {
+									values[i] = trim(values[i]);
+									switch (values[i]) {
+										case 'index':     updatePermissions(robot, 'index',   true); break;
+										case 'noindex':   updatePermissions(robot, 'index',   false); break;
+										case 'snippet':   updatePermissions(robot, 'snippet', true); break;
+										case 'nosnippet': updatePermissions(robot, 'snippet', false); break;
+									}
+								}
+								 
 								result.rules.meta.push({
 									line: meta,
-									name: name,
-									value: value
+									robot: robot,
+									values: values
 								});
 							}
 						}
@@ -66,29 +87,32 @@ exports.analyse = function (url, callback) {
 		res.on('data', function (chunk) { data += chunk });
 		res.on('end', function () {
 			var isGooglebot = false;
-			var robotLine, ruleLine;
 			result.rules.robot = [];
+			var robotLine, ruleLine, robot = '';
 			
 			data = data.replace(/[\n\r]+/g, '\n');
 			data.split('\n').forEach(function (line) {
 				line = trim(line);
-				if (line[0] != '#') {
-					if (line.substr(0, 10).toLowerCase() == 'user-agent') {
+				var parts = line.split(':');
+				if ((line[0] != '#') && (parts.length >= 2)) {
+					var command = trim(parts[0]).toLowerCase();
+					var value = trim(parts[1]);
+					
+					if (command == 'user-agent') {
 						robotLine = line;
-						var robot = trim(line.substr(11));
-						isGooglebot = (robot == '*') || (robot == 'googlebot') || (robot == 'googlebot-image') || (robot == 'googlebot-news');
-					}
-					if (line.substr(0, 8) == 'disallow') {
+						robot = value;
+						isGooglebot = ('|*|googlebot|googlebot-news|googlebot-image|'.indexOf('|'+robot+'|') >= 0);
+					} else if ((command == 'disallow') || (command == 'allow')) {
 						ruleLine = line;
 						if (isGooglebot) {
-							var rule = trim(line.substr(9));
-							if (rule == opt.path.substr(0, line.length)) {
-								rules.robot.push({
-									line1: robotLine,
-									line2: ruleLine,
-									robot: robot,
-									disallow:true 
-								});
+							var pattern = trim(value);
+							pattern = pattern.replace(/[\(\)\\\[\]\{\}]/g, '\\$&');
+							if (pattern.charAt(pattern.length - 1) != '*') pattern += '*';
+							pattern = pattern.replace(/\*/g, '.*');
+							pattern = new RegExp(pattern, 'g');
+							
+							var matchedUrl = (opt.path.match(pattern) != null);
+							
 							result.rules.robot.push({
 								line1: robotLine,
 								line2: ruleLine,
@@ -98,6 +122,13 @@ exports.analyse = function (url, callback) {
 								forGoogle: isGooglebot,
 								matchedUrl: matchedUrl
 							});
+							
+							if (matchedUrl) {
+								updatePermissions(
+									(robot == '*') ? 'robots' : robot,
+									'access',
+									command == 'allow'
+								);
 							}
 						}
 					}
