@@ -27,6 +27,23 @@ function check() {
 			html = '<div class="alert alert-error">Die Seite konnte nicht geladen werden!</div>';
 		} else {
 			html += '<h2>Zusammenfassung</h2>';
+			html += '<p class="lead">für '+data.url.prot+'//<strong>'+data.url.host+'</strong>'+data.url.path+'</p>';
+			
+			var table = '';
+			function addRow(isTrue, question) {
+				if (isTrue) {
+					table += '<tr class="good"><td>'+question+'</td><td class="icon">&#10004;</td></tr>';
+				} else {
+					table += '<tr class="bad" ><td>'+question+'</td><td class="icon">&#10008;</td></tr>';
+				}
+			}
+			addRow(data.allowed.index,    'Darf diese Seite in <strong>Suchergebnissen</strong> angezeigt werden?');
+			addRow(data.allowed.images,   'Dürfen die Bilder in der <strong>Bildersuche</strong> verwendet werden?');
+			addRow(data.allowed.news,     'Darf die Seite in <strong>Google News</strong> angezeigt werden?');
+			addRow(data.allowed.snippets, 'Dürfen Textausschnitte (sogenannte <strong>"Snippets"</strong>) verwendet werden?');
+			table = '<table class="summary">'+table+'</table>';
+			html += table;
+			
 			
 			html += '<h2>Im Detail</h2>';
 			html += '<h3>robots.txt</h3>';
