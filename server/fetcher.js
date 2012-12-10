@@ -12,10 +12,10 @@ exports.analyse = function (url, callback) {
 	var result = {
 		rules: {},
 		permissions: {
-			'robots':          {access:true, index: true, snippet: true},
-			'googlebot':       {access:true, index: true, snippet: true},
-			'googlebot-news':  {access:true, index: true, snippet: true},
-			'googlebot-image': {access:true, index: true, snippet: true}
+			'robots':          {access:true, index: true, snippets: true},
+			'googlebot':       {access:true, index: true, snippets: true},
+			'googlebot-news':  {access:true, index: true, snippets: true},
+			'googlebot-image': {access:true, index: true, snippets: true}
 		},
 		summary: {}
 	};
@@ -33,7 +33,19 @@ exports.analyse = function (url, callback) {
 	
 	var finalize = function () {
 		if ((result.rules.meta !== undefined) && (result.rules.robot !== undefined)) {
+			for (var key in result.permissions) {
+				var obj = result.permissions[key];
+				obj.index    = obj.index    && obj.access;
+				obj.snippets = obj.snippets && obj.index;
+			}
 			//result.summary = 'hallo';
+			result.summary = {
+				index:    result.permissions.googlebot.index,
+				images:   result.permissions['googlebot-image'].index,
+				news:     result.permissions['googlebot-news'].index,
+				snippets: result.permissions['googlebot-news'].snippets,
+			};
+				
 			callback(result);
 		}
 	}
@@ -63,8 +75,8 @@ exports.analyse = function (url, callback) {
 									switch (values[i]) {
 										case 'index':     updatePermissions(robot, 'index',   true); break;
 										case 'noindex':   updatePermissions(robot, 'index',   false); break;
-										case 'snippet':   updatePermissions(robot, 'snippet', true); break;
-										case 'nosnippet': updatePermissions(robot, 'snippet', false); break;
+										case 'snippet':   updatePermissions(robot, 'snippets', true); break;
+										case 'nosnippet': updatePermissions(robot, 'snippets', false); break;
 									}
 								}
 								 
