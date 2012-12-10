@@ -160,10 +160,14 @@ exports.analyse = function (url, callback) {
 
 	var requestPage  = HTTP.get({ host:opt.host, path:opt.path     }, parsePage ).on('error', function(e) {
 		console.log("Got error: " + e.message);
+		result.rules.meta = [];
+		finalize();
 	});
 	
 	var requestRobot = HTTP.get({ host:opt.host, path:'/robots.txt'}, parseRobot).on('error', function(e) {
 		console.log("Got error: " + e.message);
+		result.robots.meta = [];
+		finalize();
 	});
 
 }
