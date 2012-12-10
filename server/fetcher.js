@@ -87,9 +87,16 @@ exports.analyse = function (url, callback) {
 	
 	var opt = URL.parse(url);
 
+	result.url = {
+		prot: opt.protocol,
+		host: opt.host,
+		path: opt.path
+	};
+
 	var requestPage  = HTTP.get({ host:opt.host, path:opt.path     }, parsePage ).on('error', function(e) {
 		console.log("Got error: " + e.message);
 	});
+	
 	var requestRobot = HTTP.get({ host:opt.host, path:'/robots.txt'}, parseRobot).on('error', function(e) {
 		console.log("Got error: " + e.message);
 	});
