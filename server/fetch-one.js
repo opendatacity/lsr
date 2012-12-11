@@ -6,6 +6,7 @@ url = 'http://www.handelsblatt.com/unternehmen/it-medien/medienbranche-springer-
 url = 'http://www.heise.de/ct/artikel/Kulturkampf-1049862.html';
 url = 'http://www.welt.de/print/welt_kompakt/webwelt/article111840925/Springer-Vorstandschef-greift-Google-an.html';
 url = 'http://www.consultia.de';
+url = 'netzpolitik.org';
 
 require('./fetcher').analyse(
 	url,
