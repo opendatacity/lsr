@@ -182,7 +182,7 @@ exports.analyse = function (dirtyUrl, callback) {
 	
 	var requestRobot = protocol.get({ host:opt.host, path:'/robots.txt'}, parseRobot).on('error', function(e) {
 		console.log("Got error: " + e.message);
-		result.robots.meta = [];
+		result.rules.robot = [];
 		finalize();
 	});
 
