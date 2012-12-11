@@ -2,13 +2,28 @@ var HTTP = require('http');
 var HTTPS = require('https');
 var URL = require('url');
 
-exports.analyse = function (url, callback) {
+exports.analyse = function (dirtyUrl, callback) {
+	var url = dirtyUrl;
 	
-	if (!url.match(/http(s)?:/)) callback({});
-	
-	url = url.replace(/^(http(s)?):\/([^/].*)$/,"$1://$3",url);
+	// cleaning up url 
+	url = trim(url);
+
+	if (!url.match(/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+.*$/)) {
+		var parts = url.split('/');
+		if (!parts[0].startsWith('http')) {
+			parts.unshift('http:/');
+		}
+		url = parts.join('/');
+		
+		if (!url.match(/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+.*$/)) {
+			// Oh god, I failed! /o\
+			console.error('Defekte URL: "'+url+'" ' + ((dirtyUrl == url) ? '' : ' - Original: "'+dirtyUrl+'")'));
+		}
+	}
 	
 	console.log('Checking "'+url+'"');
+	
+	var opt = URL.parse(url);
 	
 	var protocol = HTTP;
 	if (opt.protocol == 'https') protocol = HTTP;
@@ -21,7 +36,12 @@ exports.analyse = function (url, callback) {
 			'googlebot-news':  {access:true, index: true, snippets: true},
 			'googlebot-image': {access:true, index: true, snippets: true}
 		},
-		summary: {}
+		summary: {},
+		url: {
+			prot: opt.protocol,
+			host: opt.host,
+			path: opt.path
+		}
 	};
 	
 	var updatePermissions = function (robot, type, value) {
@@ -153,14 +173,6 @@ exports.analyse = function (url, callback) {
 			finalize();
 		});
 	}
-	
-	var opt = URL.parse(url);
-
-	result.url = {
-		prot: opt.protocol,
-		host: opt.host,
-		path: opt.path
-	};
 
 	var requestPage  = protocol.get({ host:opt.host, path:opt.path     }, parsePage ).on('error', function(e) {
 		console.log("Got error: " + e.message);
@@ -178,4 +190,8 @@ exports.analyse = function (url, callback) {
 
 /* Why is always this fucking */ function /* missing to */ trim /* a fucking */ (text) /* ???? */ {
 	return text.replace(/^\s*|\s*$/g, '');
+}
+
+String.prototype.startsWith = function (text) {
+	return this.substr(0, text.length) == text;
 }
