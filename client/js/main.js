@@ -116,5 +116,8 @@ function check() {
 			html += '</div>';
 		}
 		$('#result').html(html);
-	});
+	}).error(function (e) {
+		//console.error(e);
+		$('#result').html('<p class="alert alert-error">Es gab einen Fehler beim Erreichen des Servers ... sorry :/</p>');
+	})
 }
