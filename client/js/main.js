@@ -57,7 +57,7 @@ function check() {
 			html += '<h2>Im Detail</h2>';
 			
 			html += '<h3>robots.txt</h3>';
-			html += '<p><small>Die robots.txt gibt an, welche Suchmaschinen welche Inhalte anschauen dürfen</small></p>';
+			html += '<p>Die robots.txt gibt an, welche Suchmaschinen welche Inhalte anschauen dürfen.<br>Sie ist immer zu finden unter domain/robots.txt.</p>';
 			if (data.rules.robot.length == 0) {
 				html += '<p class="alert">In der robots.txt sind für diesen Artikel keine Einschränkungen definiert. Der Artikel darf also von Google untersucht werden.</p>';
 			} else {
@@ -68,8 +68,10 @@ function check() {
 				});
 			}
 			
+			
+			
 			html += '<h3>Metadaten</h3>';
-			html += '<p><small>Metadaten werden in den einzelnen Artikelseiten versteckt, um den Suchmaschinen ganz genau zu erklären, was sie dürfen und was nicht.</small></p>';
+			html += '<p>Metadaten werden in den einzelnen Artikelseiten versteckt, um den Suchmaschinen ganz genau zu erklären, was sie dürfen und was nicht.</p>';
 			
 			if (data.rules.meta.length == 0) {
 				html += '<p class="alert">In der Artikelseite sind keine Metadaten definiert.</p>';
