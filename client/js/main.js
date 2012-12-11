@@ -53,8 +53,13 @@ function check() {
 			table = '<table class="summary">'+table+'</table>';
 			html += table;
 			
+			html += '<p style="text-align:center; margin-top: 20px;"><button id="showDetails" type="button" class="btn" data-toggle="collapse" data-target="#details">Zeige Detail</button></p>';
 			
-			html += '<h2>Im Detail</h2>';
+			html += '<div id="details" class="collapse">';
+			
+			
+			
+			html += '<h2 style="margin-top:20px">Im Detail</h2>';
 			
 			html += '<h3>robots.txt</h3>';
 			html += '<p>Die robots.txt gibt an, welche Suchmaschinen welche Inhalte anschauen dürfen.<br>Sie ist immer zu finden unter domain/robots.txt.</p>';
@@ -108,6 +113,7 @@ function check() {
 					html += '<p>Diese Anweisung gilt für '+robot+':</p><ul>'+rules.join('')+'</ul>';
 				});
 			}
+			html += '</div>';
 		}
 		$('#result').html(html);
 	});
