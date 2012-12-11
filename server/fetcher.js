@@ -1,4 +1,5 @@
 var HTTP = require('http');
+var HTTPS = require('https');
 var URL = require('url');
 
 exports.analyse = function (url, callback) {
@@ -8,6 +9,9 @@ exports.analyse = function (url, callback) {
 	url = url.replace(/^(http(s)?):\/([^/].*)$/,"$1://$3",url);
 	
 	console.log('Checking "'+url+'"');
+	
+	var protocol = HTTP;
+	if (opt.protocol == 'https') protocol = HTTP;
 	
 	var result = {
 		rules: {},
@@ -158,13 +162,13 @@ exports.analyse = function (url, callback) {
 		path: opt.path
 	};
 
-	var requestPage  = HTTP.get({ host:opt.host, path:opt.path     }, parsePage ).on('error', function(e) {
+	var requestPage  = protocol.get({ host:opt.host, path:opt.path     }, parsePage ).on('error', function(e) {
 		console.log("Got error: " + e.message);
 		result.rules.meta = [];
 		finalize();
 	});
 	
-	var requestRobot = HTTP.get({ host:opt.host, path:'/robots.txt'}, parseRobot).on('error', function(e) {
+	var requestRobot = protocol.get({ host:opt.host, path:'/robots.txt'}, parseRobot).on('error', function(e) {
 		console.log("Got error: " + e.message);
 		result.robots.meta = [];
 		finalize();
