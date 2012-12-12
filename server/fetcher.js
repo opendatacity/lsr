@@ -41,6 +41,9 @@ exports.analyse = function (dirtyUrl, callback) {
 			prot: opt.protocol,
 			host: opt.host,
 			path: opt.path
+		},
+		response: {
+			statusCode: 400
 		}
 	};
 	
