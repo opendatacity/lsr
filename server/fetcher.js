@@ -76,7 +76,10 @@ exports.analyse = function (dirtyUrl, callback) {
 	
 	var parsePage = function (res) {
 		var data = '';
-		result.statusCode = res.statusCode;
+		result.response = {
+			statusCode: res.statusCode,
+			headers: res.headers
+		};
 		res.on('data', function (chunk) { data += chunk });
 		res.on('end', function () {
 			

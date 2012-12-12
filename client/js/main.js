@@ -32,8 +32,18 @@ function check() {
 	
 	$.getJSON($server+url, function (data) {
 		var html = '';
-		if (data.statusCode != 200) {
-			html = '<div class="alert alert-error">Die Seite konnte nicht geladen werden!</div>';
+		var code = data.response.statusCode; 
+		if (code != 200) {
+			if (code == 301) {
+				var location = data.response.headers.location;
+				$('#urlInput').val(location);
+				lastHash = '#'+location;
+				window.location.hash = lastHash;
+				check();
+			} else {
+				console.log(data.response);
+				html = '<div class="alert alert-error">Die Seite konnte nicht geladen werden!</div>';
+			}
 		} else {
 			html += '<h2>Zusammenfassung</h2>';
 			html += '<p class="lead">für '+data.url.prot+'//<strong>'+data.url.host+'</strong>'+data.url.path+'</p>';
