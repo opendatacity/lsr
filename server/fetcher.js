@@ -26,7 +26,7 @@ exports.analyse = function (dirtyUrl, callback) {
 	var opt = URL.parse(url);
 	
 	var protocol = HTTP;
-	if (opt.protocol == 'https') protocol = HTTP;
+	if (opt.protocol == 'https:') protocol = HTTPS;
 	
 	var result = {
 		rules: {},
