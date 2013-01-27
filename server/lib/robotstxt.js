@@ -3,6 +3,11 @@ var https = require('https');
 var url = require('url');
 var fs = require("fs");
 var util = require("util");
+var crypto = require("crypto");
+var path = require("path");
+
+var d = new Date();
+var date_hash = (d.getFullYear()*10000+d.getMonth()*100+d.getDate()).toString(16);
 
 var robotstxt = {
 	
@@ -294,39 +299,65 @@ var robotstxt = {
 	},
 	fetch: function(request_url, fetch_callback) {
 	
-		request_url_parsed = url.parse(request_url);
-		
-		switch (request_url_parsed.protocol) {
-			
-			case "http:": var prot = http; break;
-			case "https:": var prot = https; break;
-			
-		}
-		
-		prot.get(request_url, function(res){
+		var sha1 = crypto.createHash('sha1');
+		var url_hash = sha1.update('__wwwcache '+request_url).digest('hex');
+		var cache_file = path.resolve(__dirname, '../cache', date_hash+'-'+url_hash+'-http');
+	
+		fs.exists(cache_file, function(exists){
 
-			if (res.statusCode.toString() !== "200") {
+			if (exists) {
 				
-				console.warn("[error] fetch '"+request_url+"': HTTP Status "+res.statusCode);
-				fetch_callback(true, res.statusCode);
-				
+				fs.readFile(cache_file, function (err, data) {
+
+					console.warn('[www-cache] read '+request_url);
+
+					fetch_callback(null, data.toString());
+					
+				});
+		
 			} else {
+	
+				request_url_parsed = url.parse(request_url);
+		
+				switch (request_url_parsed.protocol) {
+			
+					case "http:": var prot = http; break;
+					case "https:": var prot = https; break;
+			
+				}
+		
+				prot.get(request_url, function(res){
 
-				var data = '';
+					if (res.statusCode.toString() !== "200") {
+				
+						console.warn("[error] fetch '"+request_url+"': HTTP Status "+res.statusCode);
+						fetch_callback(true, res.statusCode);
+				
+					} else {
+
+						var data = '';
 			
-				res.on('data', function(chunk) { 
-					data += chunk.toString();
+						res.on('data', function(chunk) { 
+							data += chunk.toString();
+						});
+			
+						res.on('end', function (){
+
+							fetch_callback(null, data);
+					
+							fs.writeFile(cache_file, data);
+					
+						});
+			
+					}
+
+				}).on('error', function(e) {
+					console.warn("[error] fetch '"+request_url+"': " + e.message);
+					fetch_callback(true)
 				});
-			
-				res.on('end', function (){
-					fetch_callback(null, data);
-				});
-			
+				
 			}
-
-		}).on('error', function(e) {
-			console.warn("[error] fetch '"+request_url+"': " + e.message);
-			fetch_callback(true)
+			
 		});
 		
 	},
