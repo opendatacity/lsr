@@ -1,0 +1,312 @@
+body {}
+
+	#container {
+		
+		display: block;
+		position: relative;
+		width: 960px;
+		margin: 50px auto 50px;
+		padding: 0px;
+
+	}
+
+		#content {
+			
+			margin-top: 50px;
+			
+		}
+		
+			#content #check { display: none; }
+			#content #medien-auswertung { display: none; }
+
+			#content.check #check { display: block; }
+			#content.medien-auswertung #medien-auswertung { display: block; }
+
+		#action {
+			
+			display: block;
+			position: relative;
+			width: 958px;
+			border: 1px solid #eee;
+			margin-bottom: 50px;
+			min-height: 500px;
+			
+		}
+		
+			#queryform {
+				
+				display: block;
+				position: relative;
+				padding: 20px 170px;
+				margin: 0px;
+				border-bottom: 1px solid #eee;
+				
+			}
+			
+				#queryform #url {
+					
+					padding: 11px;
+					font-size: 20px;
+					
+				}
+			
+				#result {
+					
+					display: block;
+					position: relative;
+					
+				}
+					
+					#result-nav {
+						
+						display: none;
+						position: absolute;
+						margin: 0px;
+						padding: 0px;
+						right: 10px;
+						top: 10px;
+						z-index: 100;
+						
+					}
+					
+					#result-spinner {
+						
+						display: none;
+						position: relative;
+						height: 400px;
+						width: 958px;
+						margin: 0px;
+						padding: 0px;
+						background: url(../img/spinner.gif) center center no-repeat;
+						
+					}
+
+					#result-default {
+						
+						display: none;
+						position: relative;
+						height: 400px;
+						width: 958px;
+						margin: 0px;
+						padding: 0px;
+						
+					}
+					
+						#result-default p {
+						
+							display: block;
+							position: relative;
+							margin: 0px;
+							padding: 120px 60px 0px;
+							font-size: 30px;
+							line-height: 35px;
+						
+						}
+						
+						#result-default ul {
+						
+							display: block;
+							position: relative;
+							margin: 0px;
+							padding: 20px 80px 0px;
+						
+						}
+
+							#result-default ul li {
+								
+								font-size: 20px;
+								line-height: 25px;
+								
+							}
+						
+
+					#result-fail {
+						
+						display: none;
+						position: relative;
+						height: 400px;
+						width: 958px;
+						margin: 0px;
+						padding: 0px;
+						
+					}
+					
+						#result-fail p {
+						
+							display: block;
+							position: relative;
+							margin: 0px;
+							padding: 160px 60px 0px;
+							font-size: 35px;
+							line-height: 45px;
+							text-align: center;
+						
+						}
+					
+					#result-simple {
+						
+						display: none;
+						position: relative;
+						height: 400px;
+						width: 958px;
+						margin: 0px;
+						padding: 0px;
+						
+					}
+					
+						#result-simple p {
+							
+							display: block;
+							position: relative;
+							margin: 0px;
+							padding: 150px 60px 0px;
+							font-size: 60px;
+							line-height: 70px;
+							text-align: center;
+							
+						}
+						
+							#result-simple p.yes {
+							
+								color: #008800;
+							
+							}
+				
+							#result-simple p.no {
+							
+								color: #CC0000;
+							
+							}
+				
+					#result-medium {
+						
+						display: none;
+						position: relative;
+						margin: 0px;
+						padding: 50px;
+						
+					}
+					
+						#result-medium td {
+							
+							font-size: 1.2em;
+							
+						}
+					
+					#result-complicated {
+						
+						display: none;
+						position: relative;
+						margin: 0px;
+						padding: 50px;
+						
+					}
+					
+						#robotstxt {}
+							
+							#robotstxt .section {
+								
+								background-color: #F5F5F5;
+								border: 1px solid rgba(0, 0, 0, 0.15);
+								border-radius: 4px 4px 4px 4px;
+								display: block;
+								font-size: 13px;
+								line-height: 20px;
+								margin: 0 0 10px;
+								padding: 9.5px;
+								
+							}
+							
+								#robotstxt .section h3 {
+									
+									margin: 0px;
+									font-weight: normal;
+									border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+									
+								}
+								
+								#robotstxt .section .rules {
+									
+									display: block;
+									position: relative;
+									margin: 10px 0px 0px;
+									padding: 0px;
+									list-style: none;
+									
+								}
+									
+									#robotstxt .section .rules li {
+									
+										list-style: none;
+										font-family: "Monaco","Menlo","Consolas","Courier New",monospace;
+										font-weight: normal;
+									
+									}
+									
+										#robotstxt .section .rules li.disallow {
+										
+											color: #cc0000;
+										
+										}
+										
+											#robotstxt .section .rules li.disallow::before {
+												
+												display: block;
+												position: relative;
+												width: 80px;
+												text-align: right;
+												content: "Verboten:";
+												margin-right: 10px;
+												float: left;
+												
+											}
+					
+										#robotstxt .section .rules li.allow {
+										
+											color: #008800;
+										
+										}
+										
+											#robotstxt .section .rules li.allow::before {
+												
+												display: block;
+												position: relative;
+												width: 80px;
+												text-align: right;
+												content: "Erlaubt:";
+												margin-right: 10px;
+												float: left;
+												
+											}
+					
+					#result.default #result-default { display: block; }
+					#result.spinner #result-spinner { display: block; }
+					#result.fail #result-fail { display: block; }
+					#result.simple #result-simple { display: block; }
+					#result.medium #result-medium { display: block; }
+					#result.complicated #result-complicated { display: block; }
+
+					#result.simple #result-nav { display: block; }
+					#result.medium #result-nav { display: block; }
+					#result.complicated #result-nav { display: block; }
+
+		#footer {
+			
+			display: block;
+			position: relative;
+			margin: 50px 0px 0px;
+			padding: 20px;
+			background-color: #f6f6f6;
+			border-radius: 4px;
+			box-shadow: 0px 0px 4px rgba(0,0,0,0.05) inset;
+			
+		}
+
+	#github {
+		
+		display: block;
+		position: fixed;
+		right: 0px;
+		top: 0px;
+		
+	}

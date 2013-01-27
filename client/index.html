@@ -2,51 +2,165 @@
 <html lang="de">
 <head>
 	<meta charset="utf-8">
-	<title>Schutz vor Robotern</title>
-	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/main.css">
+	<title>Leistungsschutzcheck</title>
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script src="assets/js/jquery-1.8.3.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/js/config.js"></script>
+	<script src="assets/js/main.js"></script>
 </head>
 <body>
-	<div id="content">
-		<h1>Deutsche Verleger!<br>Schützt euch vor Google!</h1>
-		
-		<p class="lead">Google und all die anderen Suchmaschinen verwenden eure Inhalte, um sie in den Suchergebnissen anzuzeigen. Aber ihr könnt das euch davor schützen!</p>
-
-		<h2>Überprüfen, ob Deine Inhalte geschützt sind:</h2>
-		
-		<form id="checkForm">
-			<div class="input-append">
-				<input style="width:700px" id="urlInput" type="text" placeholder="Adresse einer Website oder eines Artikels...">
-				<button class="btn" id="submitButton" type="button">Überprüfen</button>
+	<div id="container">
+		<div id="logo">
+			<h1>Leistungsschutzcheck</h1>
+		</div>
+		<p class="lead">Die Debatte um das geforderte Leistungsschutzrecht ist voll von Missvertändnissen. Hier gibt es endlich Klarheit. Mit dem Leistungsschutzcheck kannst Du prüfen, welche Webseiten tatsächlich nicht von Google gefunden werden möchten.</p>
+		<div id="content" class="check">
+			<div id="check">
+				<h2>Webseite checken</h2>
+				<div id="action">
+					<form method="post" action="javascript:;" id="queryform" class="form-inline">
+						<div class="input-append">
+							<input id="url" class="input-xxlarge" name="url" type="text" placeholder="Adresse einer Website oder eines Artikels...">
+							<button class="btn btn-large" id="submit" type="submit">Check!</button>
+						</div>
+					</form>
+					<div id="result" class="default">
+						<div id="result-nav">
+							<div class="btn-group">
+								<a id="simple" class="btn btn-small" href="javascript:;">Kurz &amp; Bündig</a>
+								<a id="medium" class="btn btn-small active" href="javascript:;">Ausführlich</a>
+								<a id="complicated" class="btn btn-small" href="javascript:;">Pedantisch genau</a>
+							</div>
+						</div>
+						<div id="result-spinner"></div>
+						<div id="result-default">
+							<p>
+								<strong>Gib eine URL ein</strong> oder probier eines der Beispiele:
+							</p>
+							<ul>
+								<li><a href="#!/check/http://www.abendblatt.de/kultur-live/article1045324/Das-Copyright-ist-der-Copypreis-der-Zukunft.html"><strong>Hamburger Abendblatt</strong> — &quot;Das Copyright ist der Copypreis der Zukunft&quot;</a></li>
+								<li><a href="#!/check/http://www.handelsblatt.com/unternehmen/it-medien/medienbranche-springer-chef-pocht-auf-online-gema-fuer-verlage/3562678.html"><strong>Handeslblatt</strong> — Springer-Chef pocht auf Online-Gema für Verlage</a></li>
+								<li><a href="#!/check/http://www.heise.de/ct/artikel/Kulturkampf-1049862.html"><strong>Heise Online</strong> — Kulturkampf: Streit um das Leistungsschutzrecht für Presseverlage</a></li>
+								<li><a href="#!/check/http://www.welt.de/print/welt_kompakt/webwelt/article111840925/Springer-Vorstandschef-greift-Google-an.html"><strong>Die Welt</strong> — Springer-Vorstandschef greift Google an</a></li>
+								<li><a href="#!/check/http://www.nzz.ch/aktuell/feuilleton/medien/trittbrettfahrer-im-visier-der-verleger-1.17939341"><strong>Neue Züricher Zeitung</strong> — Trittbrettfahrer im Visier der Verleger</a></li>
+							</ul>
+						</div>
+						<div id="result-fail">
+							<p>
+								<strong>Uuups.</strong> Der Leistungsschutzcheck hat im Moment Probleme. Probier es doch später noch einmal.
+							</p>
+						</div>
+						<div id="result-simple">
+							<p class="no">
+								<strong>Nein</strong>, Diese Seite darf nicht von Google indexiert werden.
+							</p>
+						</div>
+						<div id="result-medium">
+							<h3>Zusammenfassung</h3>
+							<p class="lead">
+								für http://<strong>www.handelsblatt.com</strong>/unternehmen/it-medien/medienbranche-springer-chef-pocht-auf-online-gema-fuer-verlage/3562678.html
+							</p>
+							<table class="summary table">
+								<tbody>
+									<tr class="success">
+										<td>Darf diese Seite in <strong>Suchergebnissen</strong> aufgelistet werden?</td>
+										<td class="icon"><i class="icon-ok"></i></td>
+									</tr>
+									<tr class="success">
+										<td>Dürfen die Bilder in der <strong>Bildersuche</strong> verwendet werden?</td>
+										<td class="icon"><i class="icon-ok"></i></td>
+									</tr>
+									<tr class="error">
+										<td>Darf die Seite in <strong>Google News</strong> angezeigt werden?</td>
+										<td class="icon"><i class="icon-ban-circle"></i></td>
+									</tr>
+									<tr class="success">
+										<td>Dürfen Textausschnitte (sogenannte <strong>"Snippets"</strong>) verwendet werden?</td>
+										<td class="icon"><i class="icon-ban-circle"></i></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div id="result-complicated">
+							<div id="result-robots">
+								<h2>Robots.txt</h2>
+								<p>
+									In der Datei <a href="http://www.robotstxt.org/">robots.txt</a> steht, welche Suchmaschinen welche Inhalte indexieren dürfen. 
+									Suchmaschinen wie Google halten sich an die Angaben in dieser Datei.
+									Wer nicht von Google indexiert werden möchte, muss das also nur in diese Datei schreiben.
+								</p>
+								<div id="robotstxt">
+									<div class="section">
+										<h3>Regeln für <strong>googlebot</strong>:</h3>
+										<ul class="rules">
+											<li class="disallow">/</li>
+											<li class="disallow">/blub</li>
+											<li class="allow">/blafasel</li>
+										</ul>
+									</div>
+									<div class="section">
+										<h3>Allgemeine Regeln</h3>
+										<ul class="rules">
+											<li class="disallow">/</li>
+											<li class="disallow">/blub</li>
+											<li class="allow">/blafasel</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div id="result-metatags">
+								<h2>Metadaten</h2>
+								<p>
+									Metadaten werden in den einzelnen Artikelseiten versteckt, um den Suchmaschinen ganz genau zu erklären, was sie dürfen und was nicht.
+								</p>
+								<pre>&lt;meta name="robots" content="index,follow,noarchive"&gt;</pre>
+								<p>Diese Anweisung gilt für <strong>alle Suchmaschinen</strong> (sogenannte "robots"):</p>
+								<ul>
+									<li><strong>index</strong> - Diese Seite soll in die Suchmaschine aufgenommen werden.</li>
+									<li><strong>follow</strong> - Diese Seite soll nach weiteren Artikeln durchsucht werden.</li>
+									<li><strong>noarchive</strong> - Diese Seite darf nicht archiviert werden.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-		</form>
-		
-		<p>Sie können auch direkt einige Beispiele ausprobieren</p>
-		<div class="btn-group">
-			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Beispiele <span class="caret"></span></a>
-			<ul class="dropdown-menu" style="text-align:left">
-				<li><a href="#http://www.abendblatt.de/kultur-live/article1045324/Das-Copyright-ist-der-Copypreis-der-Zukunft.html">Hamburger Abendblatt</a></li>
-				<li><a href="#http://www.handelsblatt.com/unternehmen/it-medien/medienbranche-springer-chef-pocht-auf-online-gema-fuer-verlage/3562678.html">Handelsblatt</a></li>
-				<li><a href="#http://www.heise.de/ct/artikel/Kulturkampf-1049862.html">Heise</a></li>
-				<li><a href="#http://www.welt.de/print/welt_kompakt/webwelt/article111840925/Springer-Vorstandschef-greift-Google-an.html">DIE WELT</a></li>
-			</ul>
+			<div id="medien-auswertung">
+				<h2>Blafasel</h2>
+				<p>
+					Blubber
+				</p>
+				<a href="#!/check">Andere Webseiten prüfen</a>
+			</div>
 		</div>
-		
-		<div id="result" style="margin-top:100px">
+		<div class="row">
+			<div class="span6" id="">
+				<h3>Welche Medien schützen ihre Inhalte?</h3>
+				<p>
+					Wir haben die Webseiten von <strong>666 Zeitungen</strong> untersucht. <strong>XX%</strong> davon machen von der Möglichkeit Google auszusperren gebrauch.
+				</p>
+				<p>
+					Die Details sind in <a href="#!/get/medien-auswertung">unserer detaillierten Liste</a> zu finden.
+				</p>
+			</div>
+			<div class="span6" id="">
+				<h3>Wie kann ich meine Inhalte schützen?</h3>
+				<p>
+					Um Suchmaschinen mitzuteilen, welche Inhalte sie durchsuchen sollen, hat sich im Internet der <strong>Robots Exclusion Standard</strong> etabliert. Diesen Standard gibt es seit 1994 und er wird von allen großen Suchmaschinen eingehalten.
+				</p>
+				<p>
+					Mehr Informationen zum Thema sind zu finden in der <a href="http://de.wikipedia.org/wiki/Robots_Exclusion_Standard">Wikipedia</a> sowie auf der Webseite <a href="http://www.robotstxt.org/orig.html">robotstxt.org</a>.
+				</p>
+			</div>
 		</div>
-		
-		<h2>Welche Medien schützen ihre Inhalte?</h2>
-		
-		<h2>Wie kann ich meine Inhalte schützen?</h2>
-		
 		<div id="footer">
-			<p>Der Quellcode dieses Projektes von <a href="http://www.michael-kreil.de">Michael Kreil</a> ist offen auf <a href="https://github.com/michomachine/lsr">GitHub</a></p>
+			Diese Unabhänginge Informationsseite wird bereitgestellt von <a href="http://www.opendatacity.de/">OpenDataCity</a>. 
 		</div>
 	</div>
-   
-	<script src="js/jquery-1.8.3.min.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	<script src="js/config.js"></script>
-	<script src="js/main.js"></script>
+	<div id="github">
+		<a href="https://github.com/MichaelKreil/lsr"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+	</div>
 </body>
 </html>
