@@ -1,5 +1,5 @@
 var config = require('./config.js')
-var newspapers = require('./data/newspapers-test');
+var newspapers = require('../data/newspapers');
 var robots = require('./lib/robotstxt');
 var url = require('url');
 var querystring = require('querystring');
@@ -15,8 +15,13 @@ process.on('uncaughtException', function(err) {
   console.warn('[error] uncaught exception', err);
 });
 
+fs.unlinkSync("../data/scraper.txt");
+
 console.log('[status]'.blue, 'scraper started'.green);
 console.log('[status]'.blue, newspapers.length+' to scan'.green);
+
+var d = new Date();
+var date_hash = (d.getFullYear()*10000+d.getMonth()*100+d.getDate()).toString(16);
 
 newspapers.forEach(function(newspaper){
 
@@ -38,8 +43,6 @@ newspapers.forEach(function(newspaper){
 		
 		} else {
 			
-			var d = new Date();
-			var date_hash = (d.getFullYear()*10000+d.getMonth()*100+d.getDate()).toString(16);
 			var sha1 = crypto.createHash('sha1');
 			var url_hash = sha1.update(config.salt+' '+newspaper_url).digest('hex');
 			var cache_file = path.resolve(__dirname, 'cache', date_hash+'-'+url_hash);
@@ -70,24 +73,26 @@ newspapers.forEach(function(newspaper){
 
 						interpret(result);
 
-						result = JSON.stringify(result);
-			
-						if (config.cache) {
-			
-							fs.writeFile(cache_file, result, function(err){
-				
-								if (err) { 
-					
-									console.warn('[error] could not write cache');
-					
-								} else {
-					
-									console.warn('[cache] write '+newspaper_url);
-					
-								}
-				
-							});
+						if (config.cache && result.status) {
 							
+							// cache only if everything went well
+
+							result = JSON.stringify(result);
+
+							fs.writeFile(cache_file, result, function(err){
+
+								if (err) { 
+
+									console.warn('[error] could not write cache');
+
+								} else {
+
+									console.warn('[cache] write '+newspaper_url);
+
+								}
+
+							});
+
 						}
 			
 					});
@@ -144,7 +149,9 @@ function interpret(data) {
 	
 	// console.warn(util.inspect(_out, true, 10, true));
 
-	fs.appendFile('data/scraper.txt', '['+JSON.stringify(_out)+'],', function (err) {
+	var cache_file = path.resolve(__dirname, '../client/data/scraped-'+date_hash+'.txt');
+
+	fs.appendFile('../data/scraper.txt', '['+JSON.stringify(_out)+'],'+"\n", function (err) {
 	  if (err) throw err;
 	  console.warn('[writeout] '+data.title);
 	});
