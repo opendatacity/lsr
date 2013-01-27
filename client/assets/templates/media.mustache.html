@@ -1,0 +1,35 @@
+<h2>Medien-Auswertung</h2>
+<p>
+	Blubber
+</p>
+<table class="table table-striped table-hover">
+	<thead>
+		
+	</thead>
+	<tbody>
+		{{#media}}
+		{{#all}}
+		<tr class="all success">
+		{{/all}}
+		{{#none}}
+		<tr class="none error">
+		{{/none}}
+		{{^all}}{{^none}}
+		<tr class="some info">
+		{{/none}}{{/all}}
+			<td>{{title}}</td>
+			<td><a href="{{url}}"><i class="icon-home"></i> {{url}}</a></td>
+			{{#all}}
+			<td>Alle</td>
+			{{/all}}
+			{{#none}}
+			<td>Keine</td>
+			{{/none}}
+			{{^all}}{{^none}}
+			<td>Manche</td>
+			{{/none}}{{/all}}
+		</tr>
+		{{/media}}
+	</tbody>
+</table>
+<a href="#!/check">Andere Webseiten prüfen</a>

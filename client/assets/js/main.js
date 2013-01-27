@@ -42,6 +42,13 @@ $(document).ready(function(){
 		location.hash = '!/check/'+$('#url').val();
 		return false;
 	});
+	
+	/* build media */
+	
+	$.get('assets/templates/media.mustache.html', function(template){
+		$('#medien-auswertung').html($.mustache(template,{media: $media}));
+	}, 'html');
+	
 });
 
 function check(url) {
