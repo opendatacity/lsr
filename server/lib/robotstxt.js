@@ -11,7 +11,7 @@ var date_hash = (d.getFullYear()*10000+d.getMonth()*100+d.getDate()).toString(16
 
 var robotstxt = {
 	
-	analyse: function(analyse_url, analyse_calback) {
+	analyse: function(analyse_url, analyse_callback) {
 	
 		var analyse_result = {
 			status: null,
@@ -23,7 +23,9 @@ var robotstxt = {
 				robots: null,
 				meta: null
 			},
-			info: null
+			info: {
+				url: url.parse(analyse_url)
+			},
 		};
 	
 		var helper_called = 0;
@@ -34,7 +36,93 @@ var robotstxt = {
 			
 			if (helper_called === 2) {
 				
-				analyse_calback(analyse_result);
+				analyse_result.answers = {};
+				
+				analyse_result.answers.medium = {
+					"search": (analyse_result.permissions.robots['googlebot'] && (!"meta" in analyse_result.permissions || !"googlebot" in analyse_result.permissions.meta || !"index" in analyse_result.permissions.meta['googlebot'] || analyse_result.permissions.meta['googlebot'].index)),
+					"image": (analyse_result.permissions.robots['googlebot-image'] && (!"meta" in analyse_result.permissions || !"googlebot-image" in analyse_result.permissions.meta || !"index" in analyse_result.permissions.meta['googlebot-image'] || analyse_result.permissions.meta['googlebot-image'].index)),
+					"news": (analyse_result.permissions.robots['googlebot-news'] && (!"meta" in analyse_result.permissions || !"googlebot-news" in analyse_result.permissions.meta || !"index" in analyse_result.permissions.meta['googlebot-news'] || analyse_result.permissions.meta['googlebot-news'].index)),
+					"snippet": (!"meta" in analyse_result.permissions || !"googlebot-news" in analyse_result.permissions.meta || !"snippet" in analyse_result.permissions.meta['googlebot-news'] || analyse_result.permissions.meta['googlebot-news'].snippet)
+				}
+				
+				analyse_result.answers.simple = {};
+				
+				if (analyse_result.answers.medium.search && analyse_result.answers.medium.news && analyse_result.answers.medium.snippet && analyse_result.answers.medium.image) {
+					
+					analyse_result.answers.simple.is = "all";
+					analyse_result.answers.simple.all = true;
+					
+				} else if (!analyse_result.answers.medium.search && !analyse_result.answers.medium.news && !analyse_result.answers.medium.snippet && !analyse_result.answers.medium.image) {
+					
+					analyse_result.answers.simple.is = "none";
+					analyse_result.answers.simple.none = true;
+					
+				} else {
+					
+					analyse_result.answers.simple.is = "some";
+					analyse_result.answers.simple.some = true;
+
+				}
+				
+				analyse_result.answers.complicated = {};
+				analyse_result.answers.complicated.robots = [];
+
+				for (var key in analyse_result.rules.robots) {
+					
+					if (analyse_result.rules.robots[key].allow.length > 0 || analyse_result.rules.robots[key].disallow.length > 0) {
+
+						analyse_result.answers.complicated.robots.push({
+							name: key,
+							default: (key === '*'),
+							rules: analyse_result.rules.robots[key]
+						});
+						
+					}
+
+				}
+
+				analyse_result.answers.complicated.meta = [];
+				
+				var meta = {};
+				
+				for (var i = 0; i < analyse_result.rules.meta.length; i++) {
+					
+					meta = {
+						line: analyse_result.rules.meta[i].line,
+						robot: analyse_result.rules.meta[i].robot,
+						default: (analyse_result.rules.meta[i].robot === '*'),
+						index: false,
+						follow: false,
+						archive: false,
+						noindex: false,
+						nofollow: false,
+						noarchive: false,
+						snippet: false,
+						nosnippet: false,
+						noodp: false,
+						none: false
+					};
+					
+					for (var j = 0; j < analyse_result.rules.meta[i].values.length; j++) {
+					
+						meta[analyse_result.rules.meta[i].values[j].toLowerCase()] = true;
+					
+					}
+					
+					switch (analyse_result.rules.meta[i].robot) {
+						
+						case "googlebot": meta.name = "die Google-Suche"; break;
+						case "googlebot-image": meta.name = "die Google-Bildersuche"; break;
+						case "googlebot-news": meta.name = "die Google News"; break;
+						
+					}
+					
+					analyse_result.answers.complicated.meta.push(meta);
+					
+					
+				}
+
+				analyse_callback(analyse_result);
 				
 			}
 			
@@ -58,7 +146,7 @@ var robotstxt = {
 			analyse_result.status = _result.status;
 			analyse_result.rules.robots = _result.rules.robots;
 			analyse_result.permissions.robots = _result.permissions.robots;
-			analyse_result.info = _result.info;
+			analyse_result.info.robotstxt = _result.info.robotstxt;
 				
 			helper_callback();
 			
@@ -87,7 +175,17 @@ var robotstxt = {
 					
 					if (err) { 
 
-						analyse_page_callback(err);
+						/* no metatags because of, say, error 500? all allowed then, i guess */
+
+						analyse_page_callback(null, {
+							meta: [],
+							rules: {
+								'*': {'index': true, 'snippet': true},
+								'googlebot': {'index': true, 'snippet': true},
+								'googlebot-news': {'index': true, 'snippet': true},
+								'googlebot-image': {'index': true, 'snippet': true}
+							}
+						});
 
 					} else {
 						
@@ -109,7 +207,7 @@ var robotstxt = {
 
 											for (var i = 0; i < metatag_content.length; i++) {
 												metatag_content[i] = trim(metatag_content[i]);
-												switch (metatag_content[i]) {
+												switch (metatag_content[i].toLowerCase()) {
 													case 'index':
 														rules[robot]['index'] = true;
 													break;
@@ -120,6 +218,10 @@ var robotstxt = {
 														rules[robot]['snippet'] = true;
 													break;
 													case 'nosnippet':
+														rules[robot]['snippet'] = false;
+													break;
+													case 'none':
+														rules[robot]['index'] = false;
 														rules[robot]['snippet'] = false;
 													break;
 													
@@ -257,7 +359,7 @@ var robotstxt = {
 									_result.permissions.robots = {
 										'*': false,
 										'googlebot': false,
-										'googlebot-images': false,
+										'googlebot-image': false,
 										'googlebot-news':false
 									};
 
@@ -270,7 +372,7 @@ var robotstxt = {
 									_result.permissions.robots = {
 										'*': true,
 										'googlebot': true,
-										'googlebot-images': true,
+										'googlebot-image': true,
 										'googlebot-news': true
 									};
 									_result.message = "Es existiert keine robots.txt Datei";

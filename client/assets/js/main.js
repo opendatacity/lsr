@@ -1,5 +1,6 @@
 
 $(document).ready(function(){
+	
 	/* hash check */
 	window.currentHash = '#';
 	var hashCheck = function(){ 
@@ -59,13 +60,24 @@ function check(url) {
 		dataType: "json",
 		url: $server+url,
 		success: function (data) {
-			$('a.btn.active','#result-nav').removeClass('active');
-			if (oldClass === 'medium'||oldClass === 'complicated') {
-				$('#result').attr('class',oldClass);
-				$('#'+oldClass).addClass('active');
+			if (data.status) {
+				$('#url').val(url)
+				$('a.btn.active','#result-nav').removeClass('active');
+				if (oldClass === 'medium'||oldClass === 'complicated') {
+					$('#result').attr('class',oldClass);
+					$('#'+oldClass).addClass('active');
+				} else {
+					$('#result').attr('class','simple');
+					$('#simple').addClass('active');
+				}
+				get_result_template(function(template){
+					$('#result-container').html($.mustache(template,data));
+				});
 			} else {
-				$('#result').attr('class','complicated');//simple
-				$('#simple').addClass('active');
+				$('#result').attr('class','error');
+				setTimeout(function(){
+					$('#result').attr('class','default');
+				},5000);
 			}
 		},
 		error: function (data) {
@@ -75,6 +87,19 @@ function check(url) {
 			},5000);
 		}
 	});
+}
+
+/* get result template */
+var template_result = false;
+function get_result_template(template_callback) {
+	if (!template_result) {
+		$.get('assets/templates/result.mustache.html', function(template){
+			template_result = template;
+			template_callback(template_result);
+		},'html');
+	} else {
+		template_callback(template_result);
+	}
 }
 
 /*

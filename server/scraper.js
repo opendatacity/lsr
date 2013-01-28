@@ -151,7 +151,7 @@ function interpret(data) {
 
 	var cache_file = path.resolve(__dirname, '../client/data/scraped-'+date_hash+'.txt');
 
-	fs.appendFile('../data/scraper.txt', '['+JSON.stringify(_out)+'],'+"\n", function (err) {
+	fs.appendFile('../data/scraper.txt', "\n"+JSON.stringify(_out)+',', function (err) {
 	  if (err) throw err;
 	  console.warn('[writeout] '+data.title);
 	});

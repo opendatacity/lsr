@@ -1,0 +1,137 @@
+<div id="result-simple">
+	{{#answers.simple.all}}
+	<p class="yes">
+		<strong>Ja</strong>, Diese Seite darf von Google indexiert werden.
+	</p>
+	{{/answers.simple.all}}
+	{{#answers.simple.none}}
+	<p class="no">
+		<strong>Nein</strong>, Diese Seite darf nicht von Google indexiert werden.
+	</p>
+	{{/answers.simple.none}}
+	{{#answers.simple.some}}
+	<p class="some">
+		Diese Seite darf <strong>mit Einschränkugen</strong> von Google indexiert werden.
+	</p>
+	{{/answers.simple.some}}
+</div>
+<div id="result-medium">
+	<h3>Zusammenfassung</h3>
+	<p class="lead">
+		für {{info.url.protocol}}//<strong>{{info.url.hostname}}</strong>{{info.url.path}}
+	</p>
+	<table class="summary table">
+		<tbody>
+			{{#answers.medium.search}}
+			<tr class="success">
+				<td>Darf diese Seite in <strong>Suchergebnissen</strong> aufgelistet werden?</td>
+				<td class="icon"><i class="icon-ok"></i></td>
+			</tr>
+			{{/answers.medium.search}}
+			{{^answers.medium.search}}
+			<tr class="error">
+				<td>Darf diese Seite in <strong>Suchergebnissen</strong> aufgelistet werden?</td>
+				<td class="icon"><i class="icon-ban-circle"></i></td>
+			</tr>
+			{{/answers.medium.search}}
+			{{#answers.medium.image}}
+			<tr class="success">
+				<td>Dürfen die Bilder in der <strong>Bildersuche</strong> verwendet werden?</td>
+				<td class="icon"><i class="icon-ok"></i></td>
+			</tr>
+			{{/answers.medium.image}}
+			{{^answers.medium.image}}
+			<tr class="error">
+				<td>Dürfen die Bilder in der <strong>Bildersuche</strong> verwendet werden?</td>
+				<td class="icon"><i class="icon-ban-circle"></i></td>
+			</tr>
+			{{/answers.medium.image}}
+			{{#answers.medium.news}}
+			<tr class="success">
+				<td>Darf die Seite in <strong>Google News</strong> angezeigt werden?</td>
+				<td class="icon"><i class="icon-ok"></i></td>
+			</tr>
+			{{/answers.medium.news}}
+			{{^answers.medium.news}}
+			<tr class="error">
+				<td>Darf die Seite in <strong>Google News</strong> angezeigt werden?</td>
+				<td class="icon"><i class="icon-ban-circle"></i></td>
+			</tr>
+			{{/answers.medium.news}}
+			{{#answers.medium.snippet}}
+			<tr class="success">
+				<td>Dürfen Textausschnitte (sogenannte <strong>"Snippets"</strong>) verwendet werden?</td>
+				<td class="icon"><i class="icon-ok"></i></td>
+			</tr>
+			{{/answers.medium.snippet}}
+			{{^answers.medium.snippet}}
+			<tr class="error">
+				<td>Dürfen Textausschnitte (sogenannte <strong>"Snippets"</strong>) verwendet werden?</td>
+				<td class="icon"><i class="icon-ban-circle"></i></td>
+			</tr>
+			{{/answers.medium.snippet}}
+		</tbody>
+	</table>
+</div>
+<div id="result-complicated">
+	<div id="result-robots">
+		<h2>Robots.txt</h2>
+		<p>
+			In der Datei <a href="http://www.robotstxt.org/">robots.txt</a> steht, welche Suchmaschinen welche Inhalte indexieren dürfen. 
+			Suchmaschinen wie Google halten sich an die Angaben in dieser Datei.
+			Wer nicht von Google indexiert werden möchte, muss das also nur in diese Datei schreiben.
+		</p>
+		<div id="robotstxt">
+			{{#answers.complicated.robots}}
+			<div class="section">
+				{{#default}}
+					<h3>Allgemeine Regeln</h3>
+				{{/default}}
+				{{^default}}
+					<h3>Regeln für <strong>{{name}}</strong>:</h3>
+				{{/default}}
+				<ul class="rules">
+					{{#rules.disallow}}
+					<li class="disallow">{{.}}</li>
+					{{/rules.disallow}}
+					{{#rules.allow}}
+					<li class="allow">{{.}}</li>
+					{{/rules.allow}}
+				</ul>
+				<div class="clear"></div>
+			</div>
+			{{/answers.complicated.robots}}
+			{{^answers.complicated.robots}}
+			<div class="section">
+				<h3>Keine Regeln</h3>
+				<p>Diese Webseite hat keine robots.txt-Datei.</p>
+			</div>
+			{{/answers.complicated.robots}}
+		</div>
+	</div>
+	<div id="result-metatags">
+		<h2>Metadaten</h2>
+		<p>
+			Metadaten werden in den einzelnen Artikelseiten versteckt, um den Suchmaschinen ganz genau zu erklären, was sie dürfen und was nicht.
+		</p>
+		{{#answers.complicated.meta}}
+		<div class="metatag">
+			<pre>{{line}}</pre>
+			{{#default}}<p>Diese Anweisung gilt für <strong>alle Suchmaschinen</strong> (sogenannte "robots"):</p>{{/default}}
+			{{^default}}<p>Diese Anweisung gilt für <strong>{{meta.name}}</strong> (sogenannte "robots"):</p>{{/default}}
+			<ul>
+				{{#index}}<li><strong>index</strong> - Diese Seite soll in die Suchmaschine aufgenommen werden.</li>{{/index}}
+				{{#noindex}}<li><strong>noindex</strong> - Diese Seite darf nicht in die Suchmaschine aufgenommen werden.</li>{{/noindex}}
+				{{#follow}}<li><strong>follow</strong> - Diese Seite soll nach weiteren Artikeln durchsucht werden.</li>{{/follow}}
+				{{#nofollow}}<li><strong>nofollow</strong> - Diese Seite darf nicht nach weiteren Artikeln durchsucht werden.</li>{{/nofollow}}
+				{{#archive}}<li><strong>archive</strong> - Diese Seite darf archiviert werden.</li>{{/archive}}
+				{{#noarchive}}<li><strong>noarchive</strong> - Diese Seite darf nicht archiviert werden.</li>{{/noarchive}}
+				{{#snippet}}<li><strong>snippet</strong> - Es dürfen Textausschnitte (sogenannte Snippets) verwendet werden.</li>{{/snippet}}
+				{{#nosnippet}}<li><strong>nosnippet</strong> - Es dürfen Textausschnitte (sogenannte Snippets) nicht verwendet werden.</li>{{/nosnippet}}
+				{{#noodp}}<li><strong>noodp</strong> - Der Beschreibungstext in den Suchergebnissen darf nicht vom "open directory project" stammen.</li>{{/noodp}}
+				{{#none}}<li><strong>none</strong> - Diese Seite darf weder untersucht, noch in die Suchmaschine aufgenommen werden.</li>{{/none}}
+			</ul>
+		</div>
+		{{/answers.complicated.meta}}
+	</div>
+</div>

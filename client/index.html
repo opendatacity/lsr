@@ -54,78 +54,12 @@
 								<strong>Uuups.</strong> Der Leistungsschutzcheck hat im Moment Probleme. Probier es doch später noch einmal.
 							</p>
 						</div>
-						<div id="result-simple">
-							<p class="no">
-								<strong>Nein</strong>, Diese Seite darf nicht von Google indexiert werden.
+						<div id="result-error">
+							<p>
+								<strong>Tüt Tüt Tüt!</strong> Kein Anschluss unter dieser <abbr title="Uniform Resource Locator, quasi eine Telefonnummer für alles">URL</abbr>.
 							</p>
 						</div>
-						<div id="result-medium">
-							<h3>Zusammenfassung</h3>
-							<p class="lead">
-								für http://<strong>www.handelsblatt.com</strong>/unternehmen/it-medien/medienbranche-springer-chef-pocht-auf-online-gema-fuer-verlage/3562678.html
-							</p>
-							<table class="summary table">
-								<tbody>
-									<tr class="success">
-										<td>Darf diese Seite in <strong>Suchergebnissen</strong> aufgelistet werden?</td>
-										<td class="icon"><i class="icon-ok"></i></td>
-									</tr>
-									<tr class="success">
-										<td>Dürfen die Bilder in der <strong>Bildersuche</strong> verwendet werden?</td>
-										<td class="icon"><i class="icon-ok"></i></td>
-									</tr>
-									<tr class="error">
-										<td>Darf die Seite in <strong>Google News</strong> angezeigt werden?</td>
-										<td class="icon"><i class="icon-ban-circle"></i></td>
-									</tr>
-									<tr class="success">
-										<td>Dürfen Textausschnitte (sogenannte <strong>"Snippets"</strong>) verwendet werden?</td>
-										<td class="icon"><i class="icon-ban-circle"></i></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div id="result-complicated">
-							<div id="result-robots">
-								<h2>Robots.txt</h2>
-								<p>
-									In der Datei <a href="http://www.robotstxt.org/">robots.txt</a> steht, welche Suchmaschinen welche Inhalte indexieren dürfen. 
-									Suchmaschinen wie Google halten sich an die Angaben in dieser Datei.
-									Wer nicht von Google indexiert werden möchte, muss das also nur in diese Datei schreiben.
-								</p>
-								<div id="robotstxt">
-									<div class="section">
-										<h3>Regeln für <strong>googlebot</strong>:</h3>
-										<ul class="rules">
-											<li class="disallow">/</li>
-											<li class="disallow">/blub</li>
-											<li class="allow">/blafasel</li>
-										</ul>
-									</div>
-									<div class="section">
-										<h3>Allgemeine Regeln</h3>
-										<ul class="rules">
-											<li class="disallow">/</li>
-											<li class="disallow">/blub</li>
-											<li class="allow">/blafasel</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<div id="result-metatags">
-								<h2>Metadaten</h2>
-								<p>
-									Metadaten werden in den einzelnen Artikelseiten versteckt, um den Suchmaschinen ganz genau zu erklären, was sie dürfen und was nicht.
-								</p>
-								<pre>&lt;meta name="robots" content="index,follow,noarchive"&gt;</pre>
-								<p>Diese Anweisung gilt für <strong>alle Suchmaschinen</strong> (sogenannte "robots"):</p>
-								<ul>
-									<li><strong>index</strong> - Diese Seite soll in die Suchmaschine aufgenommen werden.</li>
-									<li><strong>follow</strong> - Diese Seite soll nach weiteren Artikeln durchsucht werden.</li>
-									<li><strong>noarchive</strong> - Diese Seite darf nicht archiviert werden.</li>
-								</ul>
-							</div>
-						</div>
+						<div id="result-container"></div>
 					</div>
 				</div>
 			</div>

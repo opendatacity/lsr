@@ -28,7 +28,7 @@ http.createServer(function(req, res){
 		
 		fs.exists(cache_file, function(exists){
 			
-			if (exists) {
+			if (exists && config.cache) {
 				
 				fs.readFile(cache_file, function (err, data) {
 
@@ -41,22 +41,27 @@ http.createServer(function(req, res){
 			} else {
 				
 				robots.analyse(query.url, function (result) {
+					
 					result = JSON.stringify(result);
 					res.end(result);
 					
-					fs.writeFile(cache_file, result, function(err){
+					if (config.cache) {
+					
+						fs.writeFile(cache_file, result, function(err){
 						
-						if (err) { 
+							if (err) { 
 							
-							console.log('[error] could not write cache');
+								console.log('[error] could not write cache');
 							
-						} else {
+							} else {
 							
-							console.log('[cached] '+query.url);
+								console.log('[cached] '+query.url);
 							
-						}
+							}
 						
-					});
+						});
+						
+					}
 					
 				});
 
