@@ -45,8 +45,10 @@ body {}
 			
 				#queryform #url {
 					
-					padding: 11px;
+					padding: 6px;
 					font-size: 20px;
+					height: 30px;
+					line-height: 30px;
 					
 				}
 			
