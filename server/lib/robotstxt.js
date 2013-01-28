@@ -85,40 +85,43 @@ var robotstxt = {
 				
 				var meta = {};
 				
-				for (var i = 0; i < analyse_result.rules.meta.length; i++) {
+				if ("meta" in analyse_result.rules && typeof analyse_result.rules.meta === "object") {
+				
+					for (var i = 0; i < analyse_result.rules.meta.length; i++) {
 					
-					meta = {
-						line: analyse_result.rules.meta[i].line,
-						robot: analyse_result.rules.meta[i].robot,
-						default: (analyse_result.rules.meta[i].robot === '*'),
-						index: false,
-						follow: false,
-						archive: false,
-						noindex: false,
-						nofollow: false,
-						noarchive: false,
-						snippet: false,
-						nosnippet: false,
-						noodp: false,
-						none: false
-					};
+						meta = {
+							line: analyse_result.rules.meta[i].line,
+							robot: analyse_result.rules.meta[i].robot,
+							default: (analyse_result.rules.meta[i].robot === '*'),
+							index: false,
+							follow: false,
+							archive: false,
+							noindex: false,
+							nofollow: false,
+							noarchive: false,
+							snippet: false,
+							nosnippet: false,
+							noodp: false,
+							none: false
+						};
 					
-					for (var j = 0; j < analyse_result.rules.meta[i].values.length; j++) {
+						for (var j = 0; j < analyse_result.rules.meta[i].values.length; j++) {
 					
-						meta[analyse_result.rules.meta[i].values[j].toLowerCase()] = true;
+							meta[analyse_result.rules.meta[i].values[j].toLowerCase()] = true;
+					
+						}
+					
+						switch (analyse_result.rules.meta[i].robot) {
+						
+							case "googlebot": meta.name = "die Google-Suche"; break;
+							case "googlebot-image": meta.name = "die Google-Bildersuche"; break;
+							case "googlebot-news": meta.name = "die Google News"; break;
+						
+						}
+					
+						analyse_result.answers.complicated.meta.push(meta);
 					
 					}
-					
-					switch (analyse_result.rules.meta[i].robot) {
-						
-						case "googlebot": meta.name = "die Google-Suche"; break;
-						case "googlebot-image": meta.name = "die Google-Bildersuche"; break;
-						case "googlebot-news": meta.name = "die Google News"; break;
-						
-					}
-					
-					analyse_result.answers.complicated.meta.push(meta);
-					
 					
 				}
 
