@@ -5,6 +5,7 @@ var fs = require("fs");
 var util = require("util");
 var crypto = require("crypto");
 var path = require("path");
+var resolver = require("./resolver");
 
 var d = new Date();
 var date_hash = (d.getFullYear()*10000+d.getMonth()*100+d.getDate()).toString(16);
@@ -520,10 +521,22 @@ var robotstxt = {
 				console.error('[error] Defekte URL: "'+request_url);
 				check_callback(true);
 			} else {
-				check_callback(null, request_url);
+				resolver(request_url, function(err, resolved_url){
+					if (err) { 
+						check_callback(true); 
+					} else {
+						check_callback(null, resolved_url);
+					}
+				});
 			}
 		} else {
-			check_callback(null, request_url);
+			resolver(request_url, function(err, resolved_url){
+				if (err) { 
+					check_callback(true); 
+				} else {
+					check_callback(null, resolved_url);
+				}
+			});
 		}
 		
 	},
