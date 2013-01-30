@@ -53,6 +53,9 @@ $(document).ready(function(){
 });
 
 function check(url) {
+	if (url.substring(0,7) !== 'http://' && url.substring(0,8) !== 'https://') {
+		url = 'http://'+url;
+	}
 	/* check */
 	var oldClass = $('#result').attr('class');
 	$('#result').attr('class','spinner');
