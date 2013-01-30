@@ -11,7 +11,7 @@ http.createServer(function(req, res){
 	
 	var query = url.parse(req.url,true).query; 
 
-	if ("url" in query && query.url.match(/^http(s)?:\/\/[a-z0-9\.]+\.[a-z]+./)) {
+	if ("url" in query && query.url.match(/^http(s)?:\/\/[A-Za-z0-9\.]+\.[A-Za-z]+./)) {
 		
 		res.writeHead(200, {'Content-Type': config.contenttype});
 

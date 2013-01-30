@@ -40,10 +40,10 @@ var robotstxt = {
 				analyse_result.answers = {};
 				
 				analyse_result.answers.medium = {
-					"search": (analyse_result.permissions.robots['googlebot'] && (!"meta" in analyse_result.permissions || !"googlebot" in analyse_result.permissions.meta || !"index" in analyse_result.permissions.meta['googlebot'] || analyse_result.permissions.meta['googlebot'].index)),
-					"image": (analyse_result.permissions.robots['googlebot-image'] && (!"meta" in analyse_result.permissions || !"googlebot-image" in analyse_result.permissions.meta || !"index" in analyse_result.permissions.meta['googlebot-image'] || analyse_result.permissions.meta['googlebot-image'].index)),
-					"news": (analyse_result.permissions.robots['googlebot-news'] && (!"meta" in analyse_result.permissions || !"googlebot-news" in analyse_result.permissions.meta || !"index" in analyse_result.permissions.meta['googlebot-news'] || analyse_result.permissions.meta['googlebot-news'].index)),
-					"snippet": (!"meta" in analyse_result.permissions || !"googlebot-news" in analyse_result.permissions.meta || !"snippet" in analyse_result.permissions.meta['googlebot-news'] || analyse_result.permissions.meta['googlebot-news'].snippet)
+					"search": (analyse_result.permissions.robots['googlebot'] && (!("meta" in analyse_result.permissions) || !("googlebot" in analyse_result.permissions.meta) || !("index" in analyse_result.permissions.meta['googlebot']) || analyse_result.permissions.meta['googlebot'].index)),
+					"image": (analyse_result.permissions.robots['googlebot-image'] && (!("meta" in analyse_result.permissions) || !("googlebot-image" in analyse_result.permissions.meta) || !("index" in analyse_result.permissions.meta['googlebot-image']) || analyse_result.permissions.meta['googlebot-image'].index)),
+					"news": (analyse_result.permissions.robots['googlebot-news'] && (!("meta" in analyse_result.permissions) || !("googlebot-news" in analyse_result.permissions.meta) || !("index" in analyse_result.permissions.meta['googlebot-news']) || analyse_result.permissions.meta['googlebot-news'].index)),
+					"snippet": (!"meta" in analyse_result.permissions || analyse_result.permissions.meta === null || !("googlebot-news" in analyse_result.permissions.meta) || !("snippet" in analyse_result.permissions.meta['googlebot-news']) || analyse_result.permissions.meta['googlebot-news'].snippet)
 				}
 				
 				analyse_result.answers.simple = {};
@@ -86,7 +86,7 @@ var robotstxt = {
 				
 				var meta = {};
 				
-				if ("meta" in analyse_result.rules && typeof analyse_result.rules.meta === "object") {
+				if ("meta" in analyse_result.rules && typeof analyse_result.rules.meta === "object" && analyse_result.rules.meta !== null) {
 				
 					for (var i = 0; i < analyse_result.rules.meta.length; i++) {
 					
@@ -508,6 +508,12 @@ var robotstxt = {
 		// check url 
 		
 		request_url = trim(request_url);
+
+		// case sensivity fix m)
+	
+		request_url = url.format(url.parse(request_url));
+
+		console.log(request_url);
 		
 		if (!request_url.match(/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+.*$/)) {
 			var parts = request_url.split('/');
