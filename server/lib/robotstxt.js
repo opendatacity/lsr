@@ -53,7 +53,7 @@ var robotstxt = {
 					analyse_result.answers.simple.is = "all";
 					analyse_result.answers.simple.all = true;
 					
-				} else if (!analyse_result.answers.medium.search && !analyse_result.answers.medium.news && !analyse_result.answers.medium.snippet && !analyse_result.answers.medium.image) {
+				} else if (!analyse_result.answers.medium.search && !analyse_result.answers.medium.news && !analyse_result.answers.medium.image) {
 					
 					analyse_result.answers.simple.is = "none";
 					analyse_result.answers.simple.none = true;
