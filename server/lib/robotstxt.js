@@ -513,8 +513,6 @@ var robotstxt = {
 	
 		request_url = url.format(url.parse(request_url));
 
-		console.log(request_url);
-		
 		if (!request_url.match(/^(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+.*$/)) {
 			var parts = request_url.split('/');
 			if (!parts[0].startsWith('http')) {
