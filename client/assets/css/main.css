@@ -9,6 +9,23 @@ body {}
 		padding: 0px;
 
 	}
+	
+		#social {
+			
+			display: block;
+			position: absolute;
+			right: 0px;
+			top: 10px;
+			
+		}
+		
+			#social .social {
+				
+				display: block;
+				position: relative;
+				float: left;
+				
+			}
 
 		#content {
 			
